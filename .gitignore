@@ -1,0 +1,10 @@
+.build/
+*.o
+*.d
+*.swp
+.DS_Store
+Cleaaan.app/
+Cleaaan.dmg
+dmg-contents/
+Resources/icon.iconset/
+Resources/AppIcon.icns
