@@ -1,0 +1,37 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build .app bundle
+        run: bash scripts/build-app.sh
+
+      - name: Create .dmg
+        run: |
+          mkdir -p dmg-contents
+          cp -r Cleaaan.app dmg-contents/
+          ln -s /Applications dmg-contents/Applications
+          hdiutil create \
+            -volname "Cleaaan" \
+            -srcfolder dmg-contents \
+            -ov \
+            -format UDZO \
+            Cleaaan.dmg
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Cleaaan.dmg
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
